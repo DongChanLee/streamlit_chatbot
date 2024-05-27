@@ -41,10 +41,10 @@ llm = ChatOpenAI(
 @st.cache_resource(show_spinner="Embedding file...")
 def embed_file(file):
     file_content = file.read()
-    file_path = f"./.cache/files/{file.name}"
+    file_path = f"./cache/files/{file.name}"
     with open(file_path, "wb") as f:
         f.write(file_content)
-    cache_dir = LocalFileStore(f"./.cache/embeddings/{file.name}")
+    cache_dir = LocalFileStore(f"./cache/embeddings/{file.name}")
     splitter = CharacterTextSplitter.from_tiktoken_encoder(
         separator="\n",
         chunk_size=600,
@@ -57,6 +57,27 @@ def embed_file(file):
     vectorstore = FAISS.from_documents(docs, cached_embeddings)
     retriever = vectorstore.as_retriever()
     return retriever
+
+
+# @st.cache_resource(show_spinner="Embedding file...")
+# def embed_file(file):
+#     file_content = file.read()
+#     file_path = f"./.cache/files/{file.name}"
+#     with open(file_path, "wb") as f:
+#         f.write(file_content)
+#     cache_dir = LocalFileStore(f"./.cache/embeddings/{file.name}")
+#     splitter = CharacterTextSplitter.from_tiktoken_encoder(
+#         separator="\n",
+#         chunk_size=600,
+#         chunk_overlap=100,
+#     )
+#     loader = UnstructuredFileLoader(file_path)
+#     docs = loader.load_and_split(text_splitter=splitter)
+#     embeddings = OpenAIEmbeddings()
+#     cached_embeddings = CacheBackedEmbeddings.from_bytes_store(embeddings, cache_dir)
+#     vectorstore = FAISS.from_documents(docs, cached_embeddings)
+#     retriever = vectorstore.as_retriever()
+#     return retriever
 
 
 def save_message(message, role):
@@ -137,46 +158,3 @@ if file:
 
 else:
     st.session_state["messages"] = []
-
-
-# st.title("DocumentGPT")
-
-# st.markdown(
-#     """
-# Welcome!
-            
-# Use this chatbot to ask questions to an AI about your files!
-# """
-# )
-
-# file = st.file_uploader(
-#     "Upload a .txt .pdf or .docx file",
-#     type=["pdf", "txt", "docx"],
-# )
-
-
-# if file:
-#     file_content = file.read()
-#     file_path = f"./.cache/files/{file.name}"
-#     with open(file_path, "wb") as f:
-#         f.write(file_content)
-#     cache_dir = LocalFileStore(f"./.cache/embeddings/{file.name}")
-#     splitter = CharacterTextSplitter.from_tiktoken_encoder(
-#         separator="\n",
-#         chunk_size=600,
-#         chunk_overlap=100,
-#     )
-#     loader = UnstructuredFileLoader(file_path)
-#     docs = loader.load_and_split(text_splitter=splitter)
-#     embeddings = OpenAIEmbeddings()
-#     cached_embeddings = CacheBackedEmbeddings.from_bytes_store(embeddings, cache_dir)
-#     vectorstore = FAISS.from_documents(docs, cached_embeddings)
-#     retriever = vectorstore.as_retriever()
-
-#     docs = retriever.invoke("AI를 적용하려는 업무 유형")
-#     st.write(docs)
-
-
-
-
-
