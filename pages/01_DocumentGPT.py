@@ -123,25 +123,25 @@ st.title("DocumentGPT")
 
 st.markdown(
     """
-Welcome!
-            
-Use this chatbot to ask questions to an AI about your files!
+안녕하세요.
 
-Upload your files on the sidebar.
+GPT에게 당신이 업로드한 파일에 대한 질문을 해주세요.
+
+파일 업로드는 사이드바를 통해 가능합니다.
 """
 )
 
 with st.sidebar:
     file = st.file_uploader(
-        "Upload a .txt .pdf or .docx file",
+        "문서를 업로드해 주세요. (.pdf, .txt, .docx)",
         type=["pdf", "txt", "docx"],
     )
 
 if file:
     retriever = embed_file(file)
-    send_message("I'm ready! Ask away!", "ai", save=False)
+    send_message("준비됐습니다. 질문을 해주세요!", "ai", save=False)
     paint_history()
-    message = st.chat_input("Ask anything about your file...")
+    message = st.chat_input("업로드한 파일과 관련하여 질문을 해주세요.")
     # 메시지 전용 llm 정의
     llm = callback_llm(chat_callback=True)
     
